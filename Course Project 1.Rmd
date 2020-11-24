@@ -3,14 +3,21 @@ title: "Course Project 1"
 author: "Patrick Koldenhof"
 date: "23-11-2020"
 output:
-  html_document: default
+  html_document: 
+    keep_md: true
   pdf_document: default
 ---
 
+```{r global_options}
+knitr::opts_chunk$set(fig.path='Figs/')
+```
+
+
 ```{r setup, include=FALSE, message=FALSE, warning=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, results = "hold")
 library(readr)
 library(dplyr)
+
 ```
 
 ## Load Data
@@ -25,10 +32,15 @@ Calculate the total number of steps taken per day. This is plotted in the histog
 stepsperday <- Activity %>% group_by(date) %>% summarise(steps = sum(steps))
 hist(stepsperday$steps, breaks = 20, main = paste("Total Steps Each Day"), col="red",xlab="Number of Steps")
 
+dev.copy(png,"plot1.png", width=480, height=480)
+dev.off()
+
 meanstepsperday <- mean(stepsperday$steps, na.rm = TRUE)
 meanstepsperday
 medianstepsperday <- median(stepsperday$steps, na.rm = TRUE)
 medianstepsperday
+
+
 ```
 
 ## Steps per interval
@@ -36,7 +48,8 @@ Plotting the 5-minute interval against the average number of steps taken in that
 ```{r, echo=TRUE}
 stepsperinterval <- Activity %>% group_by(interval) %>% summarise (steps = mean(steps, na.rm = TRUE))
 plot(stepsperinterval$interval, stepsperinterval$steps, type = "l", xlab="Interval", ylab="Number of Steps",main="Average Number of Steps per Day by Interval")
-
+dev.copy(png,"plot2.png", width=480, height=480)
+dev.off()
 
 maxinterval <- stepsperinterval[which.max(stepsperinterval$steps), 1]
 maxinterval
@@ -62,6 +75,8 @@ for(i in 1:nrow(ImputedActivity)){
 
 totalStepsPerDayImputedActivity <- aggregate(steps ~ date, data=ImputedActivity, sum)
 hist(totalStepsPerDayImputedActivity$steps, main = paste("Total Steps Each Day"), col="red",xlab="Number of Steps") 
+dev.copy(png,"plot3.png", width=480, height=480)
+dev.off()
 
 meantotalstepsperdayimputed <- mean(totalStepsPerDayImputedActivity$steps)
 meantotalstepsperdayimputed
@@ -87,5 +102,9 @@ Graph <- ggplot(perintervalanddaytype, aes(x = interval , y = steps, color = Day
        labs(title = "Mean daily steps by type of date", x = "Interval", y = "Average number of steps") +
        facet_wrap(~DayType, ncol = 1, nrow=2)
 print(Graph)
+
+dev.copy(png,"plot4.png", width=480, height=480)
+dev.off()
 ```
+
 

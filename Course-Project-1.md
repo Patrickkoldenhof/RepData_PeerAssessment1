@@ -9,6 +9,12 @@ output:
 ---
 
 
+```r
+knitr::opts_chunk$set(fig.path='Figs/')
+```
+
+
+
 
 ## Load Data
 
@@ -25,7 +31,7 @@ stepsperday <- Activity %>% group_by(date) %>% summarise(steps = sum(steps))
 hist(stepsperday$steps, breaks = 20, main = paste("Total Steps Each Day"), col="red",xlab="Number of Steps")
 ```
 
-![](Course-Project-1_files/figure-html/pressure-1.png)<!-- -->
+![](Figs/pressure-1.png)<!-- -->
 
 ```r
 dev.copy(png,"plot1.png", width=480, height=480)
@@ -61,7 +67,7 @@ stepsperinterval <- Activity %>% group_by(interval) %>% summarise (steps = mean(
 plot(stepsperinterval$interval, stepsperinterval$steps, type = "l", xlab="Interval", ylab="Number of Steps",main="Average Number of Steps per Day by Interval")
 ```
 
-![](Course-Project-1_files/figure-html/unnamed-chunk-2-1.png)<!-- -->
+![](Figs/unnamed-chunk-2-1.png)<!-- -->
 
 ```r
 dev.copy(png,"plot2.png", width=480, height=480)
@@ -105,7 +111,7 @@ totalStepsPerDayImputedActivity <- aggregate(steps ~ date, data=ImputedActivity,
 hist(totalStepsPerDayImputedActivity$steps, main = paste("Total Steps Each Day"), col="red",xlab="Number of Steps") 
 ```
 
-![](Course-Project-1_files/figure-html/unnamed-chunk-3-1.png)<!-- -->
+![](Figs/unnamed-chunk-3-1.png)<!-- -->
 
 ```r
 dev.copy(png,"plot3.png", width=480, height=480)
@@ -148,7 +154,7 @@ Graph <- ggplot(perintervalanddaytype, aes(x = interval , y = steps, color = Day
 print(Graph)
 ```
 
-![](Course-Project-1_files/figure-html/unnamed-chunk-4-1.png)<!-- -->
+![](Figs/unnamed-chunk-4-1.png)<!-- -->
 
 ```r
 dev.copy(png,"plot4.png", width=480, height=480)
