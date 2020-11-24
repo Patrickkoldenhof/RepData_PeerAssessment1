@@ -18,7 +18,7 @@ library(readr)
 library(dplyr)
 ```
 
-## Load Data
+## Loading Data
 ```{r, results='hide'}
 unzip("Activity.zip")
 Activity <- read_csv("activity.zip")
