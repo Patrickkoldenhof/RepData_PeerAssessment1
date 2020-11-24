@@ -16,7 +16,7 @@ library(readr)
 library(dplyr)
 ```
 
-## Load Data
+## Loading Data
 
 ```r
 unzip("Activity.zip")
