@@ -9,9 +9,9 @@ output:
 ---
 
 
+
+
 ```r
-knitr::opts_chunk$set(echo = TRUE, results = "hold")
-knitr::opts_chunk$set(fig.path='Figs/')
 library(readr)
 library(dplyr)
 ```
@@ -23,49 +23,31 @@ unzip("Activity.zip")
 Activity <- read_csv("activity.zip")
 ```
 
-```
-## 
-## -- Column specification --------------------------------------------------------
-## cols(
-##   steps = col_double(),
-##   date = col_date(format = ""),
-##   interval = col_double()
-## )
-```
-
 ## Steps per day
 Calculate the total number of steps taken per day. This is plotted in the histogram. Mean and median for the total number of steps per day is calculated 
 
 ```r
 stepsperday <- Activity %>% group_by(date) %>% summarise(steps = sum(steps))
-```
-
-```
-## `summarise()` ungrouping output (override with `.groups` argument)
-```
-
-```r
 hist(stepsperday$steps, breaks = 20, main = paste("Total Steps Each Day"), col="red",xlab="Number of Steps")
 ```
 
 ![](Figs/unnamed-chunk-2-1.png)<!-- -->
 
 ```r
-dev.copy(png,"plot1.png", width=480, height=480)
-dev.off()
-
 meanstepsperday <- mean(stepsperday$steps, na.rm = TRUE)
 meanstepsperday
+```
+
+```
+## [1] 10766.19
+```
+
+```r
 medianstepsperday <- median(stepsperday$steps, na.rm = TRUE)
 medianstepsperday
 ```
 
 ```
-## png 
-##   3 
-## png 
-##   2 
-## [1] 10766.19
 ## [1] 10765
 ```
 
@@ -74,35 +56,13 @@ Plotting the 5-minute interval against the average number of steps taken in that
 
 ```r
 stepsperinterval <- Activity %>% group_by(interval) %>% summarise (steps = mean(steps, na.rm = TRUE))
-```
-
-```
-## `summarise()` ungrouping output (override with `.groups` argument)
-```
-
-```r
 plot(stepsperinterval$interval, stepsperinterval$steps, type = "l", xlab="Interval", ylab="Number of Steps",main="Average Number of Steps per Day by Interval")
 ```
 
 ![](Figs/unnamed-chunk-3-1.png)<!-- -->
 
 ```r
-dev.copy(png,"plot2.png", width=480, height=480)
-dev.off()
-
 maxinterval <- stepsperinterval[which.max(stepsperinterval$steps), 1]
-maxinterval
-```
-
-```
-## png 
-##   3 
-## png 
-##   2 
-## # A tibble: 1 x 1
-##   interval
-##      <dbl>
-## 1      835
 ```
 
 ## Imputing missing values
@@ -112,7 +72,13 @@ First calculating how many rows have missing values. Subsequently the NAs are re
 ```r
 isNA <- sum(is.na(Activity$steps))
 isNA
+```
 
+```
+## [1] 2304
+```
+
+```r
 MeanStepsPerInterval<-function(interval){
     stepsperinterval[stepsperinterval$interval==interval,]$steps
 }
@@ -131,23 +97,20 @@ hist(totalStepsPerDayImputedActivity$steps, main = paste("Total Steps Each Day")
 ![](Figs/unnamed-chunk-4-1.png)<!-- -->
 
 ```r
-dev.copy(png,"plot3.png", width=480, height=480)
-dev.off()
-
 meantotalstepsperdayimputed <- mean(totalStepsPerDayImputedActivity$steps)
 meantotalstepsperdayimputed
+```
 
+```
+## [1] 10766.19
+```
+
+```r
 mediantotalstepsperdayimputed <- median(totalStepsPerDayImputedActivity$steps)
 mediantotalstepsperdayimputed
 ```
 
 ```
-## [1] 2304
-## png 
-##   3 
-## png 
-##   2 
-## [1] 10766.19
 ## [1] 10766.19
 ```
 The mean did not change, which is logical. We replaced the NA values with the mean values for each interval, so it is likely the mean per day does not change. The median did change by a value of 1.18. 
@@ -157,32 +120,12 @@ The mean did not change, which is logical. We replaced the NA values with the me
 
 ```r
 library(lubridate)
-```
-
-```
-## 
-## Attaching package: 'lubridate'
-```
-
-```
-## The following objects are masked from 'package:base':
-## 
-##     date, intersect, setdiff, union
-```
-
-```r
 ImputedActivity$date <- ymd(Activity$date)
 ImputedActivity$weekdays <- wday(Activity$date, label = TRUE)
 
 ImputedActivity$DayType <- ifelse(ImputedActivity$weekdays=='za' | ImputedActivity$weekdays=='zo', 'weekend','weekday')
 perintervalanddaytype <- ImputedActivity %>% group_by(interval, DayType) %>% summarise (steps = mean(steps, na.rm = TRUE))
-```
 
-```
-## `summarise()` regrouping output by 'interval' (override with `.groups` argument)
-```
-
-```r
 library(ggplot2)
 Graph <- ggplot(perintervalanddaytype, aes(x = interval , y = steps, color = DayType)) +
        geom_line() +
@@ -192,17 +135,5 @@ print(Graph)
 ```
 
 ![](Figs/unnamed-chunk-5-1.png)<!-- -->
-
-```r
-dev.copy(png,"plot4.png", width=480, height=480)
-dev.off()
-```
-
-```
-## png 
-##   3 
-## png 
-##   2
-```
 
 
